@@ -1,1 +1,1 @@
-# Java agent examples of Zebrunner usage
+# Java agent samples of Zebrunner usage
