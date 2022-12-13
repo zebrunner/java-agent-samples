@@ -1,1 +1,1 @@
-# java-agent-testng-samples
+# Java agent examples of Zebrunner usage
