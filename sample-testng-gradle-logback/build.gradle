@@ -27,8 +27,15 @@ dependencies {
     testImplementation 'org.testng:testng:7.7.0'
 }
 
+ext {
+    if (!project.hasProperty('suite')) {
+        suite = 'testng.xml'
+    }
+}
+
 test {
     useTestNG() {
-        suites 'src/test/resources/suites/testng.xml' // location of suite with tests
+        useDefaultListeners = true
+        suites "src/test/resources/suites/" + suite
     }
 }
