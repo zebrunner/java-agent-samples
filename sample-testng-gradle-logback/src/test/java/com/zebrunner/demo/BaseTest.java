@@ -6,6 +6,8 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.AbstractDriverOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
@@ -14,6 +16,8 @@ import org.testng.annotations.BeforeClass;
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.invoke.MethodHandles;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.Duration;
 
 public abstract class BaseTest {
@@ -26,9 +30,21 @@ public abstract class BaseTest {
 
     @BeforeClass
     public void setUp() {
-        WebDriverManager.chromedriver().setup();
-
-        driver = new ChromeDriver();
+        /** ADD GENERATED CAPABILITIES HERE */
+        AbstractDriverOptions browserOptions = null;
+        String ZEBRUNNER_GRID_URL = null;
+        /** */
+        if (ZEBRUNNER_GRID_URL == null || browserOptions == null) {
+            WebDriverManager.chromedriver().setup();
+            driver = new ChromeDriver();
+        } else {
+            try {
+                driver = new RemoteWebDriver(new URL(ZEBRUNNER_GRID_URL), browserOptions);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Error while creating a session", e);
+            }
+        }
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(DEFAULT_IMPLICIT_WAIT));
         driver.manage().window().maximize();
     }
