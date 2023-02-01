@@ -51,9 +51,25 @@ reporting.run.display-name=<display_name>
 ```
 
 ### _Step 5: Run sample test_
-Run a sample test with Zebrunner reporting:
+
+Run a sample test with Zebrunner reporting by typing a command in the terminal:
+
+#### Locally on your machine and browser
+
 ```
 gradle test -Psuite=basic.xml
+```
+
+#### Remotely on Zebrunner Selenium Grid
+
+In Zebrunner:
+- Navigate to "Automation -> Launches" page by selecting the menu from left sidebar;
+- Click on `key` icon from the top right side on Launches page;
+- You will see 'Hub Access' popup where you can copy URL of remote Selenium Grid;
+- Set copied value to environment variable `ZEBRUNNER_HUB_URL` and run a sample test:
+
+```
+ZEBRUNNER_HUB_URL="https://<username>:<accessKey>@<hub>" gradle test -Psuite=basic.xml
 ```
 
 Refer to the [documentation](https://zebrunner.com/documentation/reporting/carina-testng/) for more information.

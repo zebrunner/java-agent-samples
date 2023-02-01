@@ -20,11 +20,17 @@ dependencies {
 
     // SELENIUM
     implementation 'io.github.bonigarcia:webdrivermanager:5.3.0'
-    implementation 'org.seleniumhq.selenium:selenium-java:4.7.0'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.4.0'
 
-    // TestNG
-    implementation 'com.zebrunner:agent-testng:1.9.0'
-    testImplementation 'org.testng:testng:7.7.0'
+    // TestNG and Zebrunner agent
+    implementation 'com.zebrunner:agent-testng:1.9.2'
+    implementation 'net.bytebuddy:byte-buddy:1.12.10' // necessary for Zebrunner TestNg agent for Webdriver session(s) declaration
+    testImplementation 'org.testng:testng:7.6.0'
+}
+
+def coreAgentArtifact = configurations.testRuntimeClasspath.resolvedConfiguration.resolvedArtifacts.find { it.name == 'agent-core' }
+test.doFirst {
+    jvmArgs "-javaagent:${coreAgentArtifact.file}"
 }
 
 ext {
