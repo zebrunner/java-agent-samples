@@ -46,19 +46,19 @@ public abstract class BaseTest {
         driver.manage().window().maximize();
     }
 
-    public URL getSeleniumHubUrl() {
+    @AfterClass
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+    protected URL getSeleniumHubUrl() {
         String hubUrl = System.getenv("ZEBRUNNER_HUB_URL");
         try {
             return hubUrl != null ? new URL(hubUrl) : null;
         } catch (MalformedURLException e) {
             throw new RuntimeException("Unrecognized or unspecified ZEBRUNNER_HUB_URL environment variable", e);
-        }
-    }
-
-    @AfterClass
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
         }
     }
 
