@@ -7,7 +7,11 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.AbstractDriverOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.safari.SafariDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
@@ -24,26 +28,23 @@ public abstract class BaseTest {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final Integer DEFAULT_IMPLICIT_WAIT = 10;
+    protected WebDriver driver;
 
-    protected RemoteWebDriver driver;
+    /** REPLACE WITH YOUR CAPABILITIES HERE */
+    String ZEBRUNNER_HUB_URL = null; // "https://user:pass@example.com/wd/hub";
+
+    public AbstractDriverOptions getDriverOptions() {
+        ChromeOptions options = new ChromeOptions();
+        options.setPlatformName("Linux");
+        options.setBrowserVersion("108.0");
+        options.setCapability("enableVideo", true);
+        return options;
+    }
+    /** END OF CAPABILITIES */
 
     @BeforeClass
     public void setUp() {
-        /** ADD GENERATED CAPABILITIES HERE */
-        ChromeOptions browserOptions = new ChromeOptions();
-        browserOptions.setCapability("enableVideo", true);
-        browserOptions.setBrowserVersion("108.0");
-        browserOptions.setPlatformName("Linux");
-        /** END OF CAPABILITIES */
-        if (getSeleniumHubUrl() == null || browserOptions == null) {
-            WebDriverManager.chromedriver().setup();
-            driver = new ChromeDriver();
-        } else {
-            driver = new RemoteWebDriver(getSeleniumHubUrl(), browserOptions);
-        }
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(DEFAULT_IMPLICIT_WAIT));
-        driver.manage().window().maximize();
+        driver = initDriver(getDriverOptions());
     }
 
     @AfterClass
@@ -53,12 +54,38 @@ public abstract class BaseTest {
         }
     }
 
-    protected URL getSeleniumHubUrl() {
-        String hubUrl = System.getenv("ZEBRUNNER_HUB_URL");
+    private WebDriver initDriver(AbstractDriverOptions options) {
+        WebDriver driver = ZEBRUNNER_HUB_URL == null
+                ? getLocalDriver(options)
+                : getRemoteDriver(options);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.manage().window().maximize();
+        return driver;
+    }
+
+    private WebDriver getRemoteDriver(AbstractDriverOptions options) {
         try {
-            return hubUrl != null ? new URL(hubUrl) : null;
+            return new RemoteWebDriver(new URL(ZEBRUNNER_HUB_URL), options);
         } catch (MalformedURLException e) {
-            throw new RuntimeException("Unrecognized or unspecified ZEBRUNNER_HUB_URL environment variable", e);
+            throw new RuntimeException("Error while creating a WebDriver session", e);
+        }
+    }
+
+    private WebDriver getLocalDriver(AbstractDriverOptions options) {
+        switch (options.getBrowserName()) {
+            case "firefox":
+                WebDriverManager.firefoxdriver().setup();
+                return new FirefoxDriver();
+            case "edge":
+                WebDriverManager.edgedriver().setup();
+                return new EdgeDriver();
+            case "safari":
+                WebDriverManager.safaridriver().setup();
+                return new SafariDriver();
+            case "chrome":
+            default:
+                WebDriverManager.chromedriver().setup();
+                return new ChromeDriver();
         }
     }
 
@@ -67,7 +94,7 @@ public abstract class BaseTest {
             File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
             Screenshot.upload(new FileInputStream(screenshot).readAllBytes(), System.currentTimeMillis());
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error while taking a screenshot", e);
         }
     }
 }

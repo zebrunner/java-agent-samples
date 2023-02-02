@@ -6,7 +6,6 @@ Your guide to run the first Java + TestNG test with reporting to Zebrunner.
 
 Before you can start performing Java automation testing with Selenium, you would need to:
 - A Java Development Kit (JDK), version 8 or higher - for example [AdoptOpenJDK](https://adoptopenjdk.net/)
-- [Gradle](https://gradle.org/install/) build tool
 - [Chrome](https://www.google.com/chrome/) browser for running Selenium Web tests
 
 ## Configuration
@@ -35,13 +34,14 @@ In Zebrunner:
 ### _Step 4: Configure your agent.properties file_
 The `agent.properties` file holds all the required configuration to enable reporting of your tests on Zebrunner.
 
-- Open the file located inside `java-agent-samples/sample-testng-gradle-logback/src/test/resources` directory of cloned repository;
+- Open the file located inside `/src/test/resources` directory of cloned repository;
 - Update the `agent.properties` config file with:
-  - `reporting.server.access-token` with `token` from step #2;
   - `reporting.project-key` with `KEY` from step #3 (if not defined, `DEF` will be used by default);
   - `reporting.server.hostname` with your Zebrunner workspace;
+  - `reporting.server.access-token` with `token` from step #2;
   - `reporting.run.display-name` with launch name you wish to see in Zebrunner.
 
+#### **`agent.properties`**
 ```
 reporting.enabled=true
 reporting.project-key=<project_key>
@@ -57,7 +57,7 @@ Run a sample test with Zebrunner reporting by typing a command in the terminal:
 #### Locally on your machine and browser
 
 ```
-gradle test -Psuite=basic.xml
+./gradlew test
 ```
 
 #### Remotely on Zebrunner Selenium Grid
@@ -66,10 +66,10 @@ In Zebrunner:
 - Navigate to "Automation -> Launches" page by selecting the menu from left sidebar;
 - Click on `key` icon from the top right side on Launches page;
 - You will see 'Hub Access' popup where you can copy URL of remote Selenium Grid;
-- Set copied value to environment variable `ZEBRUNNER_HUB_URL` and run a sample test:
+- Set copied value for variable `ZEBRUNNER_HUB_URL` inside `src/test/java/com/zebrunner/demo/BaseTest.java` and run a sample test:
 
 ```
-ZEBRUNNER_HUB_URL="https://<username>:<accessKey>@<hub>" gradle test -Psuite=basic.xml
+./gradlew test
 ```
 
 Refer to the [documentation](https://zebrunner.com/documentation/reporting/carina-testng/) for more information.
