@@ -30,21 +30,20 @@ public abstract class BaseTest {
 
     protected WebDriver driver;
 
-    /** REPLACE WITH YOUR CAPABILITIES HERE */
-    String ZEBRUNNER_HUB_URL = null; // "https://user:pass@example.com/wd/hub";
+    private String ZEBRUNNER_HUB_URL;
 
-    public AbstractDriverOptions getDriverOptions() {
+    @BeforeClass
+    public void setUp() {
+        /** ADD YOUR CAPABILITIES AND ZEBRUNNER_HUB_URL HERE */
+        ZEBRUNNER_HUB_URL = null; // "https://user:pass@example.com/wd/hub";
+
         ChromeOptions options = new ChromeOptions();
         options.setPlatformName("Linux");
         options.setBrowserVersion("108.0");
         options.setCapability("enableVideo", true);
-        return options;
-    }
-    /** END OF CAPABILITIES */
+        /** END OF CAPABILITIES */
 
-    @BeforeClass
-    public void setUp() {
-        driver = initDriver(getDriverOptions());
+        driver = initDriver(options);
     }
 
     @AfterClass
