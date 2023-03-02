@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite verbose="1" name="Basic Zebrunner Demo Suite" parallel="methods">
+
+	<test name="Basic Reporting Demo">
+		<classes>
+			<class name="com.zebrunner.demo.BasicReportingTest" />
+		</classes>
+	</test>
+
+</suite>
