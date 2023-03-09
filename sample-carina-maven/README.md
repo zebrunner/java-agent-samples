@@ -1,4 +1,4 @@
-# Zebrunner Carina reporting agent
+# Zebrunner Carina reporting agent sample
 
 ## sample-carina-maven
 
