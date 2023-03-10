@@ -9,8 +9,8 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * Example shows BASIC reporting to Zebrunner:
- * - passed/failed test methods
- * - logs and screenshots inside them
+ * - test run structure
+ * - logs and screenshots
  */
 public class BasicReportingTest extends BaseTest {
 
@@ -30,7 +30,7 @@ public class BasicReportingTest extends BaseTest {
         }
 
         LOGGER.info("Performing search with value: " + SEARCH_VALUE);
-        WebElement searchInput = driver.findElement(By.xpath("//input[@title='Search']"));
+        WebElement searchInput = driver.findElement(By.xpath("//*[@name='q']"));
         searchInput.sendKeys(SEARCH_VALUE);
         searchInput.sendKeys(Keys.ENTER);
         takeScreenshot(driver);

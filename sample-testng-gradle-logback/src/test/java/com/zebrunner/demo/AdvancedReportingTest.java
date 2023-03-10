@@ -39,7 +39,7 @@ public class AdvancedReportingTest extends BaseTest {
     }
 
     @Test
-    @Maintainer("skywalker")
+    @Maintainer("hpotter")
     public void testWithSpecificMaintainer() {
         LOGGER.info("Example shows how to attach a maintainer for a specific test");
         LOGGER.info("NOTE: The maintainer username should be a valid Zebrunner username, otherwise it will be set to anonymous");
@@ -65,15 +65,16 @@ public class AdvancedReportingTest extends BaseTest {
     }
 
     @Test
-    public void testWithArtifactAndReference() {
-        LOGGER.info("Example shows how to attach artifact and reference for a specific test");
+    public void testWithArtifacts() {
+        LOGGER.info("Example shows how to attach artifact for a specific test and a whole test run");
         Artifact.attachToTest("simple.txt", Paths.get("src/test/resources/artifacts/simple.txt"));
-        Artifact.attachReferenceToTest("Zebrunner website", "https://zebrunner.com");
-
-        LOGGER.info("Attach an artifact for a test run");
         Artifact.attachToTestRun("welcome.png", Paths.get("src/test/resources/artifacts/welcome.png"));
+    }
 
-        LOGGER.info("Attach an artifact reference for a test run");
+    @Test
+    public void testWithArtifactReferences() {
+        LOGGER.info("Example shows how to attach reference for a specific test and a whole test run");
+        Artifact.attachReferenceToTest("Zebrunner website", "https://zebrunner.com");
         Artifact.attachReferenceToTestRun("Zebrunner documentation", "https://zebrunner.com/documentation/");
     }
 }

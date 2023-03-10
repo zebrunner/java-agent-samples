@@ -1,7 +1,9 @@
 package com.zebrunner.demo;
 
 import com.zebrunner.agent.core.registrar.Screenshot;
+import com.zebrunner.agent.core.webdriver.RemoteWebDriverFactory;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -54,7 +56,7 @@ public abstract class BaseTest {
     }
 
     private WebDriver initDriver(AbstractDriverOptions options) {
-        WebDriver driver = ZEBRUNNER_HUB_URL == null
+        WebDriver driver = System.getProperty("ZEBRUNNER_HUB_URL", ZEBRUNNER_HUB_URL) == null
                 ? getLocalDriver(options)
                 : getRemoteDriver(options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
@@ -62,16 +64,18 @@ public abstract class BaseTest {
         return driver;
     }
 
-    private WebDriver getRemoteDriver(AbstractDriverOptions options) {
+    private WebDriver getRemoteDriver(Capabilities capabilities) {
+        Capabilities launcherCapabilities = RemoteWebDriverFactory.getCapabilities();
+        Capabilities remoteCapabilities = launcherCapabilities.asMap().isEmpty() ? capabilities : launcherCapabilities;
         try {
-            return new RemoteWebDriver(new URL(ZEBRUNNER_HUB_URL), options);
+            return new RemoteWebDriver(new URL(ZEBRUNNER_HUB_URL), remoteCapabilities);
         } catch (MalformedURLException e) {
             throw new RuntimeException("Error while creating a WebDriver session", e);
         }
     }
 
-    private WebDriver getLocalDriver(AbstractDriverOptions options) {
-        switch (options.getBrowserName()) {
+    private WebDriver getLocalDriver(Capabilities capabilities) {
+        switch (capabilities.getBrowserName()) {
             case "firefox":
                 WebDriverManager.firefoxdriver().setup();
                 return new FirefoxDriver();
@@ -84,7 +88,9 @@ public abstract class BaseTest {
             case "chrome":
             default:
                 WebDriverManager.chromedriver().setup();
-                return new ChromeDriver();
+                ChromeOptions options = new ChromeOptions();
+                options.addArguments("--remote-allow-origins=*");
+                return new ChromeDriver(options);
         }
     }
 
