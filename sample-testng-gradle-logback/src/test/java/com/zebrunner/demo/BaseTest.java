@@ -55,23 +55,20 @@ public abstract class BaseTest {
         }
     }
 
-    private WebDriver initDriver(AbstractDriverOptions options) {
-        WebDriver driver = System.getProperty("ZEBRUNNER_HUB_URL", ZEBRUNNER_HUB_URL) == null
-                ? getLocalDriver(options)
-                : getRemoteDriver(options);
+    private WebDriver initDriver(Capabilities capabilities) {
+        URL hubUrl = getSeleniumHubUrl();
+        WebDriver driver = hubUrl == null
+                ? getLocalDriver(capabilities)
+                : getRemoteDriver(hubUrl, capabilities);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.manage().window().maximize();
         return driver;
     }
 
-    private WebDriver getRemoteDriver(Capabilities capabilities) {
+    private WebDriver getRemoteDriver(URL hubUrl, Capabilities capabilities) {
         Capabilities launcherCapabilities = RemoteWebDriverFactory.getCapabilities();
         Capabilities remoteCapabilities = launcherCapabilities.asMap().isEmpty() ? capabilities : launcherCapabilities;
-        try {
-            return new RemoteWebDriver(new URL(ZEBRUNNER_HUB_URL), remoteCapabilities);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException("Error while creating a WebDriver session", e);
-        }
+        return new RemoteWebDriver(hubUrl, remoteCapabilities);
     }
 
     private WebDriver getLocalDriver(Capabilities capabilities) {
@@ -92,6 +89,21 @@ public abstract class BaseTest {
                 options.addArguments("--remote-allow-origins=*");
                 return new ChromeDriver(options);
         }
+    }
+
+    private URL getSeleniumHubUrl() {
+        URL launcherHubUrl = RemoteWebDriverFactory.getSeleniumHubUrl();
+        if (launcherHubUrl != null) {
+            return launcherHubUrl;
+        }
+        if (ZEBRUNNER_HUB_URL != null) {
+            try {
+                return new URL(ZEBRUNNER_HUB_URL);
+            } catch (MalformedURLException e) {
+                throw new RuntimeException("Incorrect Selenium Grid URL", e);
+            }
+        }
+        return null;
     }
 
     protected void takeScreenshot(WebDriver driver) {
