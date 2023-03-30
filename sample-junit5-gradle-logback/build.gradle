@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+}
+
+group 'com.zebrunner'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // LOGGING
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'ch.qos.logback:logback-core:1.2.3'
+    implementation 'ch.qos.logback:logback-classic:1.2.3'
+
+    // SELENIUM
+    implementation 'io.github.bonigarcia:webdrivermanager:5.3.0'
+    implementation 'org.seleniumhq.selenium:selenium-java:4.4.0'
+
+    // JUnit5 and Zebrunner agent
+    implementation 'com.zebrunner:agent-junit5:1.9.3'
+    implementation 'net.bytebuddy:byte-buddy:1.12.10' // necessary for Zebrunner TestNg agent for Webdriver session(s) declaration
+    implementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    implementation 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+}
+
+test {
+    def coreAgentArtifact = configurations.testRuntimeClasspath.resolvedConfiguration.resolvedArtifacts.find { it.name == 'agent-core' }
+    test.doFirst {
+        jvmArgs "-javaagent:${coreAgentArtifact.file}"
+    }
+
+    useJUnitPlatform()
+}
