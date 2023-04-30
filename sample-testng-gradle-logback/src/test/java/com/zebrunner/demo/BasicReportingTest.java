@@ -19,24 +19,56 @@ public class BasicReportingTest extends BaseTest {
     private static final String SEARCH_VALUE = "Zebrunner";
 
     @Test
-    public void testGoogleSearch() {
-        LOGGER.info("Navigating to url: " + URL);
-        driver.get(URL);
+    public void testGoogleSearchPass() {
+        openUrlAndAcceptCookies(URL);
+        performSearch(SEARCH_VALUE);
+
+        LOGGER.info("Verify first search result contains " + SEARCH_VALUE);
+        WebElement firstSearchResultLink = driver.findElement(By.xpath("//*[@id='search']//a"));
+        assertTrue(firstSearchResultLink.getText().contains(SEARCH_VALUE), "Incorrect first search result");
+    }
+
+    @Test
+    public void testGoogleSearchFailByAuto() {
+        openUrlAndAcceptCookies(URL);
+        performSearch(SEARCH_VALUE);
+
+        LOGGER.info("Verify first search result equals " + SEARCH_VALUE);
+        WebElement firstSearchResultLink = driver.findElement(By.xpath("//*[@id='result']//a"));
+        assertTrue(firstSearchResultLink.getText().contains(SEARCH_VALUE), "Incorrect first search result");
+    }
+
+    @Test
+    public void testGoogleSearchFailByBusiness() {
+        openUrlAndAcceptCookies(URL);
+        performSearch(SEARCH_VALUE);
+
+        LOGGER.info("Verify first search result equals " + SEARCH_VALUE);
+        WebElement firstSearchResultLink = driver.findElement(By.xpath("//*[@id='search']//a"));
+        assertTrue(firstSearchResultLink.getText().equals(SEARCH_VALUE), "Incorrect first search result");
+    }
+
+    @Test(dependsOnMethods = "testGoogleSearchFailByBusiness")
+    public void testGoogleSearchSkip() {
+        LOGGER.info("Empty test that will be skipped");
+    }
+
+    private void openUrlAndAcceptCookies(String url) {
+        LOGGER.info("Navigating to url: " + url);
+        driver.get(url);
         takeScreenshot(driver);
         if (driver.getPageSource().contains(COOKIES_DIALOG_TEXT)) {
             LOGGER.info("Cookies use popup is displayed, necessary to click 'Accept all'");
             driver.findElement(By.xpath("//button[.='Accept all']")).click();
             takeScreenshot(driver);
         }
+    }
 
-        LOGGER.info("Performing search with value: " + SEARCH_VALUE);
+    private void performSearch(String value) {
+        LOGGER.info("Performing search with value: " + value);
         WebElement searchInput = driver.findElement(By.xpath("//*[@name='q']"));
-        searchInput.sendKeys(SEARCH_VALUE);
+        searchInput.sendKeys(value);
         searchInput.sendKeys(Keys.ENTER);
         takeScreenshot(driver);
-
-        LOGGER.info("Verify first search result contains " + SEARCH_VALUE);
-        WebElement firstSearchResultLink = driver.findElement(By.xpath("//*[@id='search']//a"));
-        assertTrue(firstSearchResultLink.getText().contains(SEARCH_VALUE), "Incorrect first search result");
     }
 }
