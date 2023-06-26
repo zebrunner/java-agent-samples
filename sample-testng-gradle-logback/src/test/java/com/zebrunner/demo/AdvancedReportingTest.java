@@ -39,7 +39,7 @@ public class AdvancedReportingTest extends BaseTest {
     }
 
     @Test
-    @Maintainer("hpotter")
+    @Maintainer("asukhodolova")
     public void testWithSpecificMaintainer() {
         LOGGER.info("Example shows how to attach a maintainer for a specific test");
         LOGGER.info("NOTE: The maintainer username should be a valid Zebrunner username, otherwise it will be set to anonymous");
