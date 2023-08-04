@@ -42,6 +42,7 @@ public class BasicReportingTest extends BaseTest {
     }
 
     @Test
+    @TestCaseKey({"ZTP-1852"})
     public void testGoogleSearchFailByBusiness() {
         openUrlAndAcceptCookies(URL);
         performSearch(SEARCH_VALUE);
