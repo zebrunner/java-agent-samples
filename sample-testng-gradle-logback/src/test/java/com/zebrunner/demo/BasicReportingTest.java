@@ -20,7 +20,7 @@ public class BasicReportingTest extends BaseTest {
     private static final String SEARCH_VALUE = "Zebrunner";
 
     @Test
-    @TestCaseKey({"ZTP-1848", "ZTP-1849", "ZTP-1847"})
+    @TestCaseKey({"WEB-6", "WEB-18", "WEB-27"})
     public void testGoogleSearchPass() {
         openUrlAndAcceptCookies(URL);
         performSearch(SEARCH_VALUE);
@@ -31,7 +31,7 @@ public class BasicReportingTest extends BaseTest {
     }
 
     @Test
-    @TestCaseKey({"ZTP-1854", "ZTP-1850"})
+    @TestCaseKey({"WEB-7", "WEB-19"})
     public void testGoogleSearchFailByAuto() {
         openUrlAndAcceptCookies(URL);
         performSearch(SEARCH_VALUE);
@@ -42,7 +42,7 @@ public class BasicReportingTest extends BaseTest {
     }
 
     @Test
-    @TestCaseKey({"ZTP-1852"})
+    @TestCaseKey({"WEB-21", "WEB-49", "WEB-35"})
     public void testGoogleSearchFailByBusiness() {
         openUrlAndAcceptCookies(URL);
         performSearch(SEARCH_VALUE);
@@ -53,7 +53,6 @@ public class BasicReportingTest extends BaseTest {
     }
 
     @Test(dependsOnMethods = "testGoogleSearchFailByBusiness")
-    @TestCaseKey({"ZTP-1851"})
     public void testGoogleSearchSkip() {
         LOGGER.info("Empty test that will be skipped");
     }
