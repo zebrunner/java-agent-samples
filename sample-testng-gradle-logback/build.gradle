@@ -35,7 +35,7 @@ test.doFirst {
 
 ext {
     if (!project.hasProperty('suite')) {
-        suite = 'basic.xml'
+        suite = 'testng.xml'
     }
 }
 
