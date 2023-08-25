@@ -26,6 +26,8 @@ dependencies {
     implementation 'com.zebrunner:agent-testng:1.9.5'
     implementation 'net.bytebuddy:byte-buddy:1.12.18' // necessary for Zebrunner TestNg agent for Webdriver session(s) declaration
     testImplementation 'org.testng:testng:7.6.0'
+    implementation group: 'io.cucumber', name: 'cucumber-java', version: '7.13.0'
+    implementation group: 'io.cucumber', name: 'cucumber-testng', version: '7.13.0'
 }
 
 def coreAgentArtifact = configurations.testRuntimeClasspath.resolvedConfiguration.resolvedArtifacts.find { it.name == 'agent-core' }
@@ -35,7 +37,7 @@ test.doFirst {
 
 ext {
     if (!project.hasProperty('suite')) {
-        suite = 'testng.xml'
+        suite = 'cucumber.xml'
     }
 }
 

@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite verbose="1" name="Zebrunner Demo Suite">
+    <test name="Cucumber Demo">
+        <classes>
+            <class name="com.zebrunner.cucumber.runner.CucumberRunnerTests"/>
+        </classes>
+    </test>
+
+</suite>
